@@ -16,6 +16,7 @@ spec:
         application-credential-secret: ${app_secret}
         region: ${region}
         tenant-id: ${project_id}
+        tls-insecure: true
       loadBalancer:
         floating-network-id: ${floating_network_id}
         floating-subnet-id: ${floating_subnet_id}

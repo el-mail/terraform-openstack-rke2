@@ -1,5 +1,5 @@
 module "controlplane" {
-  source           = "remche/rke2/openstack"
+  source           = "git::https://github.com/el-mail/terraform-openstack-rke2"
   write_kubeconfig = true
   image_name       = "fg-services-ubuntu-20.04-x86_64.raw"
   flavor_name      = "m1.large-2d"
@@ -11,7 +11,7 @@ module "controlplane" {
 }
 
 module "worker" {
-  source                 = "remche/rke2/openstack//modules/agent"
+  source                 = "git::https://github.com/el-mail/terraform-openstack-rke2//modules/agent"
   image_name             = "fg-services-ubuntu-20.04-x86_64.raw"
   nodes_count            = 1
   name_prefix            = "worker"

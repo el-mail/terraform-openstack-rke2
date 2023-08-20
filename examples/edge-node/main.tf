@@ -1,5 +1,5 @@
 module "controlplane" {
-  source           = "remche/rke2/openstack"
+  source           = "git::https://github.com/el-mail/terraform-openstack-rke2"
   cluster_name     = var.cluster_name
   write_kubeconfig = true
   image_name       = "ubuntu-20.04-focal-x86_64"
@@ -10,7 +10,7 @@ module "controlplane" {
 }
 
 module "edge_node" {
-  source             = "remche/rke2/openstack//modules/agent"
+  source             = "git::https://github.com/el-mail/terraform-openstack-rke2//modules/agent"
   image_name         = "ubuntu-20.04-focal-x86_64"
   nodes_count        = 1
   name_prefix        = "edge"
@@ -21,7 +21,7 @@ module "edge_node" {
 }
 
 module "worker_node" {
-  source      = "remche/rke2/openstack//modules/agent"
+  source      = "git::https://github.com/el-mail/terraform-openstack-rke2//modules/agent"
   image_name  = "ubuntu-20.04-focal-x86_64"
   nodes_count = 2
   name_prefix = "worker"

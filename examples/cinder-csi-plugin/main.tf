@@ -21,7 +21,7 @@ resource "openstack_identity_application_credential_v3" "rke2_csi" {
 }
 
 module "controlplane" {
-  source           = "remche/rke2/openstack"
+  source           = "git::https://github.com/el-mail/terraform-openstack-rke2"
   cluster_name     = var.cluster_name
   write_kubeconfig = true
   image_name       = "ubuntu-20.04-focal-x86_64"

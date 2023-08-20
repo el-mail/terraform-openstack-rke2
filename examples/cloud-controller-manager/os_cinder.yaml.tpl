@@ -22,3 +22,4 @@ spec:
          application-credential-secret=${app_secret}
          region=${region}
          tenant-id=${project_id}
+         TLSInsecure=true

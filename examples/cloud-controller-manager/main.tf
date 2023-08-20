@@ -35,7 +35,7 @@ data "openstack_networking_subnet_v2" "nodes_subnet" {
 data "openstack_networking_subnet_v2" "public_subnet" {
   # You MUST update this to match your cloud
   # do: `openstack subnet list`
-  name = "external"
+  name = "subnet_pool_16_ip"
 }
 
 resource "openstack_identity_application_credential_v3" "rke2_csi" {
@@ -56,11 +56,16 @@ module "controlplane" {
   source           = "remche/rke2/openstack"
   cluster_name     = var.cluster_name
   write_kubeconfig = true
-  image_name       = "Ubuntu-20.04"
-  flavor_name      = "ec1.medium"
-  public_net_name  = "external"
+  image_name       = "Ubuntu 22.04 LTS (jammy)"
+  flavor_name      = "Com_A2_DP3"
+  boot_from_volume = true
+  boot_volume_size = 20
+  boot_volume_type = "SAS_HDD_DP3"
+  public_net_name  = "pool_16_ip"
   nodes_count      = 1
   rke2_config      = file("rke2_config.yaml")
+
+  dns_servers      = ["1.1.1.1", "8.8.8.8"]
   manifests_gzb64 = {
     "cinder-csi-plugin" : local.os_cinder_b64
     "openstack-controller-manager" : local.os_ccm_b64
