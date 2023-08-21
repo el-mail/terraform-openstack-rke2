@@ -107,6 +107,7 @@ runcmd:
   - export https_proxy=${proxy_url}
   - export no_proxy=%{ for s in no_proxy ~}${s},%{ endfor }${bootstrap_server}
 %{ endif ~}
+  - apt-get update -y
   - /usr/local/bin/install-or-upgrade-rke2.sh
   %{~ if is_server ~}
     %{~ if bootstrap_server != "" ~}
