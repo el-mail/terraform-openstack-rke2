@@ -5,9 +5,9 @@ locals {
     ssh_key_file       = var.ssh_key_file
     system_user        = var.system_user
     use_ssh_agent      = var.use_ssh_agent
-    network_id         = module.network.nodes_net_id
-    subnet_id          = module.network.nodes_subnet_id
-    secgroup_id        = module.secgroup.secgroup_id
+    network_id         = var.network_id == null ? module.network[0].nodes_net_id : var.network_id
+    subnet_id          = var.subnet_id == null ? module.network[0].nodes_subnet_id : var.subnet_id
+    secgroup_id        = var.secgroup_id == null ? module.secgroup[0].secgroup_id : var.secgroup_id
     server_affinity    = var.server_group_affinity
     config_drive       = var.nodes_config_drive
     floating_ip_pool   = var.public_net_name
@@ -17,7 +17,7 @@ locals {
     boot_volume_type   = var.boot_volume_type
     availability_zones = var.availability_zones
     bootstrap_server   = module.server.internal_ip[0]
-    bastion_host       = module.server.floating_ip[0]
+    bastion_host       = module.server.public_address[0]
     rke2_token         = random_string.rke2_token.result
     registries_conf    = var.registries_conf
     proxy_url          = var.proxy_url
@@ -27,7 +27,7 @@ locals {
   ssh_key_arg      = var.use_ssh_agent ? "" : "-i ${var.ssh_key_file}"
   ssh              = "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${local.ssh_key_arg}"
   scp              = "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${local.ssh_key_arg}"
-  remote_rke2_yaml = "${var.system_user}@${module.server.floating_ip[0]}:/etc/rancher/rke2/rke2-remote.yaml"
+  remote_rke2_yaml = "${var.system_user}@${module.server.public_address[0]}:/etc/rancher/rke2/rke2-remote.yaml"
 }
 
 module "keypair" {
@@ -38,6 +38,7 @@ module "keypair" {
 }
 
 module "network" {
+  count           = var.network_id == null ? 1 : 0
   source          = "./modules/network"
   network_name    = "${var.cluster_name}-nodes-net"
   subnet_name     = "${var.cluster_name}-nodes-subnet"
@@ -49,6 +50,7 @@ module "network" {
 }
 
 module "secgroup" {
+  count       = var.secgroup_id == null ? 1 : 0
   source      = "./modules/secgroup"
   name_prefix = var.cluster_name
   rules       = var.secgroup_rules
@@ -67,11 +69,11 @@ module "server" {
   ssh_key_file           = var.ssh_key_file
   system_user            = var.system_user
   use_ssh_agent          = var.use_ssh_agent
-  network_id             = module.network.nodes_net_id
-  subnet_id              = module.network.nodes_subnet_id
-  secgroup_id            = module.secgroup.secgroup_id
+  network_id             = var.network_id == null ? module.network[0].nodes_net_id : var.network_id
+  subnet_id              = var.subnet_id == null ? module.network[0].nodes_subnet_id : var.subnet_id
+  secgroup_id            = var.secgroup_id == null ? module.secgroup[0].secgroup_id : var.secgroup_id
   server_affinity        = var.server_group_affinity
-  assign_floating_ip     = "true"
+  assign_floating_ip     = var.assign_floating_ip
   config_drive           = var.nodes_config_drive
   floating_ip_pool       = var.public_net_name
   user_data              = var.user_data_file != null ? file(var.user_data_file) : null

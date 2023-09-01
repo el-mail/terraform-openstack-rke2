@@ -25,7 +25,7 @@ resource "openstack_compute_instance_v2" "instance" {
   user_data = base64encode(templatefile(("${path.module}/files/cloud-init.yml.tpl"),
     { cluster_name     = var.cluster_name
       bootstrap_server = var.is_server && count.index != 0 ? openstack_networking_port_v2.port[0].all_fixed_ips[0] : var.bootstrap_server
-      public_address   = var.assign_floating_ip && var.is_server ? openstack_networking_floatingip_v2.floating_ip[count.index].address : openstack_networking_port_v2.port[0].all_fixed_ips[0]
+      public_address   = var.assign_floating_ip && var.is_server ? openstack_networking_floatingip_v2.floating_ip[count.index].address : openstack_networking_port_v2.port[count.index].all_fixed_ips[0]
       rke2_token       = var.rke2_token
       is_server        = var.is_server
       san              = var.assign_floating_ip ? openstack_networking_floatingip_v2.floating_ip[*].address : openstack_networking_port_v2.port[*].all_fixed_ips[0]

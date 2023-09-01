@@ -60,6 +60,12 @@ variable "no_proxy" {
 # Secgroup variables #
 ######################
 
+variable "secgroup_id" {
+  type        = string
+  default     = null
+  description = "Security group id"
+}
+
 variable "secgroup_rules" {
   type = list(any)
   default = [{ "source" = "0.0.0.0/0", "protocol" = "tcp", "port" = 22 },
@@ -74,6 +80,24 @@ variable "secgroup_rules" {
 # Network variables #
 #####################
 
+variable "network_id" {
+  type        = string
+  default     = null
+  description = "Network id"
+}
+
+variable "subnet_id" {
+  type        = string
+  default     = null
+  description = "Subnet id"
+}
+
+variable "assign_floating_ip" {
+  type        = bool
+  default     = false
+  description = "Assign floating ip"
+}
+
 variable "nodes_net_cidr" {
   type        = string
   default     = "192.168.42.0/24"
@@ -82,6 +106,7 @@ variable "nodes_net_cidr" {
 
 variable "public_net_name" {
   type        = string
+  default     = null
   description = "External network name"
 }
 
