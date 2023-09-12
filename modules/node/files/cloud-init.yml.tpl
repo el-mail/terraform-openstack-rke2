@@ -91,6 +91,9 @@ write_files:
     HTTP_PROXY=${proxy_url}
     HTTPS_PROXY=${proxy_url}
     NO_PROXY=%{ for s in no_proxy ~}${s},%{ endfor }
+    CONTAINERD_HTTP_PROXY=${proxy_url}
+    CONTAINERD_HTTPS_PROXY=${proxy_url}
+    CONTAINERD_NO_PROXY=%{ for s in no_proxy ~}${s},%{ endfor }
     # END TERRAFORM MANAGED BLOCK
 - path: /etc/default/rke2-agent
   append: true
@@ -99,6 +102,9 @@ write_files:
     HTTP_PROXY=${proxy_url}
     HTTPS_PROXY=${proxy_url}
     NO_PROXY=%{ for s in no_proxy ~}${s},%{ endfor }
+    CONTAINERD_HTTP_PROXY=${proxy_url}
+    CONTAINERD_HTTPS_PROXY=${proxy_url}
+    CONTAINERD_NO_PROXY=%{ for s in no_proxy ~}${s},%{ endfor }
     # END TERRAFORM MANAGED BLOCK
 %{ endif ~}
 runcmd:
